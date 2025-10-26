@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>دستیار باران</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: radial-gradient(circle at top, #101010, #000);
+      color: #eee;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 440px;
+      margin: 40px auto;
+      background: #111;
+      border-radius: 18px;
+      padding: 25px;
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.1);
+      border: 1px solid rgba(255, 215, 0, 0.05);
+      position: relative;
+      z-index: 2;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: space-around;
+      border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+      margin-bottom: 20px;
+    }
+
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 10px;
+      cursor: pointer;
+      color: #aaa;
+      transition: 0.2s;
+      font-weight: 600;
+      border-radius: 10px 10px 0 0;
+    }
+
+    .tab.active {
+      color: #d4af37;
+      background: #1a1a1a;
+      box-shadow: 0 -2px 8px rgba(255, 215, 0, 0.2);
+    }
+
+    h2 {
+      text-align: center;
+      color: #d4af37;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 0.9rem;
+      color: #bbb;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-size: 0.9rem;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      margin-top: 6px;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      background: #1b1b1b;
+      color: #eee;
+      font-size: 0.9rem;
+      box-sizing: border-box;
+    }
+
+    select option {
+      background: #1b1b1b;
+      color: #fff;
+    }
+
+    textarea {
+      resize: none;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 25px;
+      padding: 12px;
+      border: none;
+      border-radius: 12px;
+      background-color: #d4af37;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background-color: #e0bf55;
+    }
+
+    .footer {
+      text-align: center;
+      color: #777;
+      font-size: 0.8rem;
+      margin-top: 15px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* Modal styles */
+    .modal-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      backdrop-filter: blur(5px);
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-bg.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: #121212;
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      border-radius: 15px;
+      padding: 25px;
+      max-width: 320px;
+      text-align: center;
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.2);
+      animation: pop 0.3s ease;
+    }
+
+    .modal h3 {
+      color: #d4af37;
+      margin-bottom: 10px;
+    }
+
+    .modal p {
+      color: #ccc;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+    }
+
+    .modal button {
+      background: #d4af37;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    @keyframes pop {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="tabs">
+      <div class="tab active" id="serviceTab">درخواست خدمات</div>
+      <div class="tab" id="feedbackTab">ارسال پیشنهاد / بازخورد</div>
+    </div>
+
+    <!-- SERVICE FORM -->
+    <div id="serviceForm">
+      <h2>درخواست خدمات باران</h2>
+      <p>لطفاً اطلاعات را کامل کنید تا تیم پشتیبانی سریع‌تر پیگیری کند.</p>
+      <form id="baranForm">
+        <label>نام و نام خانوادگی</label>
+        <input type="text" id="name" placeholder="مثلاً نیما رضایی" required>
+
+        <label>شماره واحد</label>
+        <input type="text" id="apartment" placeholder="مثلاً ۲۴" required>
+
+        <label>طبقه</label>
+        <input type="text" id="floor" placeholder="مثلاً ۳" required>
+
+        <label>نوع مشکل</label>
+        <select id="type" required>
+          <option value="">انتخاب کنید...</option>
+          <option value="مشکل فنی">مشکل فنی</option>
+          <option value="پیشنهاد">پیشنهاد</option>
+          <option value="درخواست ملاقات">درخواست ملاقات</option>
+        </select>
+
+        <label>توضیحات (اختیاری)</label>
+        <textarea id="details" placeholder="شرح کوتاه مشکل..."></textarea>
+
+        <button type="submit">ارسال گزارش</button>
+      </form>
+    </div>
+
+    <!-- FEEDBACK FORM -->
+    <div id="feedbackForm" class="hidden">
+      <h2>ارسال پیشنهاد / بازخورد</h2>
+      <p>لطفاً پیشنهاد یا نظر خود را با ما در میان بگذارید.</p>
+
+      <form id="suggestForm">
+        <label>نام و نام خانوادگی</label>
+        <input type="text" id="fname" placeholder="مثلاً نیما رضایی" required>
+
+        <label>پیشنهاد یا بازخورد</label>
+        <textarea id="suggest" placeholder="نظر یا پیشنهاد شما..." required></textarea>
+
+        <button type="submit">ارسال پیشنهاد</button>
+      </form>
+    </div>
+
+    <div class="footer">
+      نسخه مینی‌اپ · ارسال مستقیم به بات تلگرام باران
+    </div>
+  </div>
+
+  <!-- Custom Modal -->
+  <div class="modal-bg" id="notif">
+    <div class="modal">
+      <h3>عملیات موفق</h3>
+      <p>درخواست با موفقیت ارسال شد.</p>
+      <button id="closeNotif">تایید</button>
+    </div>
+  </div>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    const serviceTab = document.getElementById('serviceTab');
+    const feedbackTab = document.getElementById('feedbackTab');
+    const serviceForm = document.getElementById('serviceForm');
+    const feedbackForm = document.getElementById('feedbackForm');
+    const notif = document.getElementById('notif');
+    const closeNotif = document.getElementById('closeNotif');
+
+    serviceTab.onclick = () => {
+      serviceTab.classList.add('active');
+      feedbackTab.classList.remove('active');
+      serviceForm.classList.remove('hidden');
+      feedbackForm.classList.add('hidden');
+    };
+
+    feedbackTab.onclick = () => {
+      feedbackTab.classList.add('active');
+      serviceTab.classList.remove('active');
+      feedbackForm.classList.remove('hidden');
+      serviceForm.classList.add('hidden');
+    };
+
+    document.getElementById('baranForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = {
+        type: "service",
+        name: document.getElementById('name').value,
+        apartment: document.getElementById('apartment').value,
+        floor: document.getElementById('floor').value,
+        issue: document.getElementById('type').value,
+        details: document.getElementById('details').value,
+        user: tg.initDataUnsafe?.user?.username || ""
+      };
+      await sendToServer(data);
+    });
+
+    document.getElementById('suggestForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = {
+        type: "feedback",
+        name: document.getElementById('fname').value,
+        feedback: document.getElementById('suggest').value,
+        user: tg.initDataUnsafe?.user?.username || ""
+      };
+      await sendToServer(data);
+    });
+
+    async function sendToServer(data) {
+      try {
+        const res = await fetch('http://localhost:3000/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const result = await res.json();
+        if (result.success) {
+          notif.classList.add('active');
+        } else alert("خطا: " + (result.error || "ارسال ناموفق."));
+      } catch (err) {
+        alert("اتصال برقرار نشد: " + err.message);
+      }
+    }
+
+    closeNotif.onclick = () => {
+      notif.classList.remove('active');
+      tg.close();
+    };
+  </script>
+</body>
+</html>
