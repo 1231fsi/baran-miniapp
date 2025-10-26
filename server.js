@@ -1,22 +1,26 @@
 import express from "express";
 import fetch from "node-fetch";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
+// File path setup
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Environment variables from Vercel
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const GROUP_CHAT_ID = process.env.GROUP_CHAT_ID;
-
-// Telegram API endpoint
 const TELEGRAM_API = `https://api.telegram.org/bot${BOT_TOKEN}`;
 
-// ✅ Handle /start and /help commands
+// --- Telegram commands (/start, /help) ---
 app.post("/webhook", async (req, res) => {
   try {
     const update = req.body;
-
     if (update.message && update.message.text) {
       const chatId = update.message.chat.id;
       const text = update.message.text.trim();
@@ -38,7 +42,6 @@ app.post("/webhook", async (req, res) => {
         `);
       }
     }
-
     res.sendStatus(200);
   } catch (err) {
     console.error("Webhook error:", err.message);
@@ -46,7 +49,7 @@ app.post("/webhook", async (req, res) => {
   }
 });
 
-// ✅ Normal form submission route
+// --- Mini-app submission route ---
 app.post("/submit", async (req, res) => {
   try {
     const { type, name, apartment, floor, issue, details, feedback, user } = req.body;
@@ -86,6 +89,12 @@ ${user ? `💬 ارسال‌شده توسط: @${user}` : ""}
   }
 });
 
+// --- Serve your mini-app frontend ---
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
+
+// --- Helper function ---
 async function sendMessage(chatId, text) {
   await fetch(`${TELEGRAM_API}/sendMessage`, {
     method: "POST",
