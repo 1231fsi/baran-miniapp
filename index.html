@@ -295,7 +295,7 @@
 
     async function sendToServer(data) {
       try {
-        const res = await fetch('http://localhost:3000/submit', {
+        const res = await fetch('https://baran-miniapp.vercel.app/submit', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
